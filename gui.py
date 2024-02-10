@@ -1,65 +1,64 @@
-from tkinter import Tk, Label, Button, Frame, StringVar
+from tkinter import Tk, Label, Button, Frame, StringVar, Entry
 import random
 
-def func_generate_number():
+def func_generate_number(min_val, max_val):
     """
-    Gera um número inteiro aleatório entre 1 e 100.
-
-    Retorna:
-        int: Um número aleatório entre 1 e 100.
+    Gera um número inteiro aleatório dentro do intervalo especificado.
     """
-    return random.randint(1, 100)
+    return random.randint(min_val, max_val)
 
 def update_label_with_random_number():
     """
-    Atualiza o label com um número aleatório gerado pela função func_generate_number.
+    Atualiza o label com um número aleatório gerado pela função func_generate_number,
+    utilizando os valores mínimo e máximo fornecidos pelos inputs.
     """
-    # Gera um número aleatório e atualiza a variável vinculada ao label que mostra o número.
-    random_number = func_generate_number()
-    random_number_var.set(f"Número gerado: {random_number}")
+    try:
+        min_val = int(min_val_var.get())
+        max_val = int(max_val_var.get())
+        # Certifica-se de que o valor mínimo é menor que o máximo
+        if min_val < max_val:
+            random_number = func_generate_number(min_val, max_val)
+            random_number_var.set(f"Número gerado: {random_number}")
+        else:
+            random_number_var.set("Min deve ser menor que Max.")
+    except ValueError:
+        random_number_var.set("Por favor, insira valores numéricos válidos.")
 
 def create_gui_elements(frame):
     """
     Cria e posiciona todos os elementos da interface gráfica do usuário (GUI) no frame fornecido.
-
-    Parâmetros:
-        frame (Frame): O frame no qual os elementos da GUI serão colocados.
     """
-    # Configura as colunas para que se expandam e centralizem os elementos, garantindo uma distribuição equilibrada do espaço.
-    frame.grid_columnconfigure(0, weight=1)
-    frame.grid_columnconfigure(2, weight=1)
+    Label(frame, text="Gerar Número Aleatório:").grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+
+    # Cria os labels para os inputs de mínimo e máximo.
+    Label(frame, text="MIN").grid(row=1, column=0, padx=5, pady=5, sticky="ew")
+    Entry(frame, textvariable=min_val_var, width=5).grid(row=2, column=0, padx=5, pady=5, sticky="ew")
     
-    # Configura a última linha para expandir, movendo o botão para a parte inferior do frame.
-    frame.grid_rowconfigure(5, weight=1)  # Ajusta conforme a necessidade de disposição dos elementos.
-
-    # Cria e posiciona os elementos da GUI, utilizando o método grid para alinhamento e distribuição.
-    Label(frame, text="Gerar Número Aleatório:").grid(row=0, column=1, padx=10, pady=10, sticky="ew")
-    # Cria um label para mostrar o número aleatório gerado.
-    Label(frame, textvariable=random_number_var).grid(row=2, column=1, padx=10, pady=10, sticky="ew")
-    # Cria um botão que, quando pressionado, irá gerar um novo número aleatório e atualizar o label correspondente.
-    Button(frame, text="Gerar Número!", command=update_label_with_random_number).grid(row=3, column=1, padx=10, pady=10, sticky="ew")
-
+    Label(frame, text="MAX").grid(row=1, column=2, padx=5, pady=5, sticky="ew")
+    Entry(frame, textvariable=max_val_var, width=5).grid(row=2, column=2, padx=5, pady=5, sticky="ew")
+    
+    Label(frame, textvariable=random_number_var).grid(row=3, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
+    
+    # Posiciona o botão abaixo dos inputs e do label de número gerado.
+    Button(frame, text="Gerar Número!", command=update_label_with_random_number).grid(row=4, column=0, columnspan=3, padx=10, pady=10, sticky="ew")
 
 def main():
-    """
-    Função principal para configurar a janela do Tkinter e inicializar a aplicação.
-    """
-    global random_number_var  # Declara a variável global para armazenar o número aleatório.
+    global random_number_var, min_val_var, max_val_var
     root = Tk()
     root.title("Gerador de Número Aleatório")
-    root.geometry("420x280")  # Define o tamanho inicial da janela.
-    root.resizable(0, 0)  # Desabilita o redimensionamento da janela.
+    root.geometry("420x280")
+    root.resizable(0, 0)
 
-    random_number_var = StringVar()  # Inicializa a variável StringVar.
-    random_number_var.set("Número gerado aparecerá aqui")  # Define o valor inicial.
+    random_number_var = StringVar(value="Número gerado aparecerá aqui")
+    min_val_var = StringVar(value="1")
+    max_val_var = StringVar(value="100")
 
     frame = Frame(root)
-    frame.pack(pady=20)  # Adiciona um padding vertical para o frame.
+    frame.pack(pady=20)
 
-    create_gui_elements(frame)  # Chama a função para criar os elementos da GUI no frame.
+    create_gui_elements(frame)
 
-    # Adiciona um label para a versão da aplicação, posicionado na parte inferior.
-    version_label = Label(root, text="v1.1.0", anchor="e")
+    version_label = Label(root, text="v1.2.0", anchor="e")
     version_label.pack(side="bottom", fill="x", padx=10, pady=5)
 
     root.mainloop()
