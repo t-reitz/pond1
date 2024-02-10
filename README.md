@@ -34,4 +34,4 @@ Este projeto é distribuído sob a licença MIT. Veja o arquivo `LICENSE` para m
 
 ## Versão
 
-Este documento foi atualizado pela última vez para a versão v1.2.0 da aplicação.
+Este documento foi atualizado pela última vez para a versão v1.3.0 da aplicação.
